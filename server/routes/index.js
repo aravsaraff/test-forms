@@ -10,6 +10,7 @@ module.exports = (passport) => {
 
 	// form routes
 	router.post('/createForm', forms.createForm);
+	router.post('/fetchForm', forms.fetchForm);
 
 	return router;
 };

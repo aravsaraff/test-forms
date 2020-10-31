@@ -32,7 +32,7 @@ module.exports = () => {
 					});
 				}
 				await db.Form.findOneAndUpdate(
-					{ title: formData.title },
+					{ id: formData.id },
 					{
 						$push: {
 							fields: field
@@ -46,6 +46,36 @@ module.exports = () => {
 			return res.send(err);
 		}
 	};
+
+	exp.fetchForm = async (req, res) => {
+		try {
+			let id = req.body.id;
+			let form = await db.Form.findOne(
+				{ id: id },
+				{
+					id: 1,
+					title: 1,
+					description: 1,
+					'fields.type': 1,
+					'fields.question': 1,
+					'fields.option1': 1,
+					'fields.option2': 1,
+					'fields.option3': 1,
+					'fields.option4': 1
+				}
+			);
+			console.log(form);
+			if (!form) {
+				return res.status(404).send('Form not found.');
+			}
+			return res.status(200).send(form);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	exp.checkForm = async (req, res) => {};
+	exp.fetchResult = async (req, res) => {};
 
 	return exp;
 };
