@@ -42,8 +42,15 @@ const FormSchema = new mongoose.Schema({
 	fields: [FieldSchema]
 });
 
+const SubmissionSchema = new mongoose.Schema({
+	formId: String,
+	answer: Array,
+	score: Number
+});
+
 exp.User = mongoose.model('User', UserSchema);
 exp.Field = mongoose.model('Field', FieldSchema);
 exp.Form = mongoose.model('Form', FormSchema);
+exp.Submission = mongoose.model('Submission', SubmissionSchema);
 
 module.exports = exp;

@@ -69,7 +69,60 @@ module.exports = () => {
 		}
 	};
 
-	exp.checkForm = async (req, res) => {};
+	exp.checkForm = async (req, res) => {
+		try {
+			let id = req.body.id;
+			let form = await db.Form.findOne(
+				{ id: id },
+				{
+					id: 1,
+					title: 1,
+					description: 1,
+					'fields.type': 1,
+					'fields.question': 1,
+					'fields.options': 1,
+					'fields.answer': 1
+				}
+			);
+			if (!form) {
+				return res.status(404).send('Form not found.');
+			}
+
+			let userAnswers = req.body.answers;
+			let userScore = 0;
+			form.fields.map((obj, ind) => {
+				if (obj.type === 'single') {
+					if (obj.answer.includes(userAnswers[ind])) userScore += 4;
+					else userScore -= 1;
+				} else if (obj.type === 'multiple') {
+					userAnswers[ind] = userAnswers[ind].sort();
+					// console.log(userAnswers[ind]);
+					// console.log(obj.answer);
+					if (userAnswers[ind].length !== obj.answer.length) {
+						userScore -= 1;
+					} else {
+						var i;
+						for (i = 0; userAnswers[ind][i] === obj.answer[i] && i < userAnswers[ind].length; i++);
+						if (i === userAnswers[ind].length) userScore += 4;
+						else userScore -= 1;
+					}
+				}
+			});
+			console.log(userScore);
+
+			let submission = new db.Submission({
+				formId: id,
+				answer: userAnswers,
+				score: userScore
+			});
+			await submission.save();
+
+			return res.status(200).send({ score: userScore });
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	exp.fetchResult = async (req, res) => {};
 
 	return exp;

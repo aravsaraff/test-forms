@@ -82,8 +82,9 @@ export default class Form extends Component {
 		try {
 			e.preventDefault();
 			let { answers } = this.state;
-			let resp = await Axios.post('/checkForm', { id: this.state.id, answers: answers });
 			console.log(answers);
+			let resp = await Axios.post('/checkForm', { id: this.state.id, answers: answers });
+			console.log(resp.data);
 		} catch (err) {
 			console.log(err);
 		}
@@ -120,7 +121,7 @@ export default class Form extends Component {
 				if (!answers[currentIndex]) {
 					answers[currentIndex] = [];
 				}
-				answers[currentIndex].push(e.target.value);
+				answers[currentIndex].push(parseInt(e.target.value));
 			} else {
 				answers[currentIndex] = e.target.value;
 			}
