@@ -15,15 +15,12 @@ module.exports = () => {
 			await form.save();
 			formData.formFields.forEach(async (obj) => {
 				let field;
-				if (obj.type === 'mcq') {
+				if (obj.type === 'single' || obj.type === 'multiple') {
 					field = new db.Field({
 						type: obj.type,
 						question: obj.question,
-						option1: obj.options[0],
-						option2: obj.options[1],
-						option3: obj.options[2],
-						option4: obj.options[3],
-						answers: obj.answers
+						options: obj.options,
+						answer: obj.answer
 					});
 				} else {
 					field = new db.Field({
@@ -58,16 +55,14 @@ module.exports = () => {
 					description: 1,
 					'fields.type': 1,
 					'fields.question': 1,
-					'fields.option1': 1,
-					'fields.option2': 1,
-					'fields.option3': 1,
-					'fields.option4': 1
+					'fields.options': 1
 				}
 			);
 			console.log(form);
 			if (!form) {
 				return res.status(404).send('Form not found.');
 			}
+			//
 			return res.status(200).send(form);
 		} catch (err) {
 			console.log(err);

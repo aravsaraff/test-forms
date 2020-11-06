@@ -31,11 +31,8 @@ const UserSchema = new mongoose.Schema({
 const FieldSchema = new mongoose.Schema({
 	type: String,
 	question: String,
-	option1: String,
-	option2: String,
-	option3: String,
-	option4: String,
-	answers: [Boolean]
+	options: [String],
+	answer: [Number]
 });
 
 const FormSchema = new mongoose.Schema({

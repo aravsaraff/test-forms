@@ -1,5 +1,5 @@
 import React from 'react';
-import { CreateForm, ShowForm } from './components';
+import { CreateForm, Form } from './components';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import './App.scss';
 
@@ -9,7 +9,7 @@ function App() {
 			<div className='App'>
 				<Switch>
 					<Route path='/create' component={CreateForm} />
-					<Route path='/form/:id' component={ShowForm} />
+					<Route path='/form/:id' component={Form} />
 				</Switch>
 			</div>
 		</Router>
