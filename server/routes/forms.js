@@ -92,20 +92,15 @@ module.exports = () => {
 			let userScore = 0;
 			form.fields.map((obj, ind) => {
 				if (obj.type === 'single') {
-					if (obj.answer.includes(userAnswers[ind])) userScore += 4;
+					var i;
+					for (i = 0; userAnswers[ind][i] === obj.answer[i] && i < userAnswers[ind].length; i++);
+					if (i === userAnswers[ind].length) userScore += 4;
 					else userScore -= 1;
 				} else if (obj.type === 'multiple') {
-					userAnswers[ind] = userAnswers[ind].sort();
-					// console.log(userAnswers[ind]);
-					// console.log(obj.answer);
-					if (userAnswers[ind].length !== obj.answer.length) {
-						userScore -= 1;
-					} else {
-						var i;
-						for (i = 0; userAnswers[ind][i] === obj.answer[i] && i < userAnswers[ind].length; i++);
-						if (i === userAnswers[ind].length) userScore += 4;
-						else userScore -= 1;
-					}
+					var i;
+					for (i = 0; userAnswers[ind][i] === obj.answer[i] && i < userAnswers[ind].length; i++);
+					if (i === userAnswers[ind].length) userScore += 4;
+					else userScore -= 1;
 				}
 			});
 			console.log(userScore);
