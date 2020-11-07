@@ -21,12 +21,6 @@ export default class CreateForm extends Component {
 		try {
 			e.preventDefault();
 
-			let answer = [];
-			if (e.target.option1.checked) answer.push(0);
-			if (e.target.option2.checked) answer.push(1);
-			if (e.target.option3.checked) answer.push(2);
-			if (e.target.option4.checked) answer.push(3);
-
 			let addedQ = {
 				type: 'single',
 				question: e.target.question.value,
@@ -36,7 +30,7 @@ export default class CreateForm extends Component {
 					e.target.single_option3.value,
 					e.target.single_option4.value
 				],
-				answer: answer
+				answer: [e.target.option1.checked, e.target.option2.checked, e.target.option3.checked, e.target.option4.checked]
 			};
 			console.log(addedQ);
 			this.setState((prevState) => ({ formFields: [...prevState.formFields, addedQ] }));
@@ -65,12 +59,6 @@ export default class CreateForm extends Component {
 		try {
 			e.preventDefault();
 
-			let answer = [];
-			if (e.target.option1.checked) answer.push(0);
-			if (e.target.option2.checked) answer.push(1);
-			if (e.target.option3.checked) answer.push(2);
-			if (e.target.option4.checked) answer.push(3);
-
 			let addedQ = {
 				type: 'multiple',
 				question: e.target.question.value,
@@ -80,7 +68,7 @@ export default class CreateForm extends Component {
 					e.target.multiple_option3.value,
 					e.target.multiple_option4.value
 				],
-				answer: answer
+				answer: [e.target.option1.checked, e.target.option2.checked, e.target.option3.checked, e.target.option4.checked]
 			};
 			console.log(addedQ);
 			this.setState((prevState) => ({ formFields: [...prevState.formFields, addedQ] }));
@@ -154,7 +142,6 @@ export default class CreateForm extends Component {
 					<input type='text' name='question' />
 					<input type='submit' value='Add Subjective' />
 				</form>
-
 				<button onClick={this.createForm}> Create Form </button>
 				<Datetime />
 			</div>

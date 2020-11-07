@@ -32,7 +32,7 @@ const FieldSchema = new mongoose.Schema({
 	type: String,
 	question: String,
 	options: [String],
-	answer: [Number]
+	answer: [Boolean]
 });
 
 const FormSchema = new mongoose.Schema({
