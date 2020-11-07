@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // import Question from './Question';
 import Axios from 'axios';
+import './Form.scss';
 
 // Axios config
 Axios.defaults.baseURL = process.env.REACT_APP_SERVER;
@@ -8,42 +9,61 @@ Axios.defaults.baseURL = process.env.REACT_APP_SERVER;
 function Question(props) {
 	if (props.field.type === 'single') {
 		return (
-			<div id='single' key={props.currentIndex} onChange={props.handleChange}>
-				<p>{props.field.question}</p>
-				<input type='radio' id='op1' value='0' name={props.field.question} />
-				<label htmlFor='op1'>{props.field.options[0]}</label>
-				<br />
-				<input type='radio' id='op2' value='1' name={props.field.question} />
-				<label htmlFor='op2'>{props.field.options[1]}</label>
-				<br />
-				<input type='radio' id='op3' value='2' name={props.field.question} />
-				<label htmlFor='op3'>{props.field.options[2]}</label>
-				<br />
-				<input type='radio' id='op4' value='3' name={props.field.question} />
-				<label htmlFor='op4'>{props.field.options[3]}</label>
+			<div id='single' className='form-pane' key={props.currentIndex} onChange={props.handleChange}>
+				<div className='question'>{props.field.question}</div>
+
+				<div className='option'>
+					<input type='radio' id='op1' value='0' name={props.field.question} />
+					<label htmlFor='op1'>{props.field.options[0]}</label>
+				</div>
+
+				<div className='option'>
+					<input type='radio' id='op2' value='1' name={props.field.question} />
+					<label htmlFor='op2'>{props.field.options[1]}</label>
+				</div>
+
+				<div className='option'>
+					<input type='radio' id='op3' value='2' name={props.field.question} />
+					<label htmlFor='op3'>{props.field.options[2]}</label>
+				</div>
+
+				<div className='option'>
+					<input type='radio' id='op4' value='3' name={props.field.question} />
+					<label htmlFor='op4'>{props.field.options[3]}</label>
+				</div>
 			</div>
 		);
 	} else if (props.field.type === 'multiple') {
 		return (
-			<div id='multiple' key={props.currentIndex} onChange={props.handleChange}>
-				<p>{props.field.question}</p>
-				<input type='checkbox' id='op1' value='0' name='op1' />
-				<label htmlFor='op1'>{props.field.options[0]}</label>
-				<br />
-				<input type='checkbox' id='op2' value='1' name='op2' />
-				<label htmlFor='op2'>{props.field.options[1]}</label>
-				<br />
-				<input type='checkbox' id='op3' value='2' name='op3' />
-				<label htmlFor='op3'>{props.field.options[2]}</label>
-				<br />
-				<input type='checkbox' id='op4' value='3' name='op3' />
-				<label htmlFor='op4'>{props.field.options[3]}</label>
+			<div id='multiple' className='form-pane' key={props.currentIndex} onChange={props.handleChange}>
+				<div className='question'>{props.field.question}</div>
+
+				<div className='option'>
+					<input type='checkbox' id='op1' value='0' name='op1' />
+					<label htmlFor='op1'>{props.field.options[0]}</label>
+				</div>
+
+				<div className='option'>
+					<input type='checkbox' id='op2' value='1' name='op2' />
+					<label htmlFor='op2'>{props.field.options[1]}</label>
+				</div>
+
+				<div className='option'>
+					<input type='checkbox' id='op3' value='2' name='op3' />
+					<label htmlFor='op3'>{props.field.options[2]}</label>
+				</div>
+
+				<div className='option'>
+					<input type='checkbox' id='op4' value='3' name='op3' />
+					<label htmlFor='op4'>{props.field.options[3]}</label>
+				</div>
 			</div>
 		);
 	} else {
 		return (
-			<div id='subjective' key={props.currentIndex} onChange={props.handleChange}>
-				<p>{props.field.question}</p>
+			<div id='subjective' className='form-pane' key={props.currentIndex} onChange={props.handleChange}>
+				<div className='question'>{props.field.question}</div>
+
 				<input type='text' id='answer' />
 			</div>
 		);
@@ -135,9 +155,11 @@ export default class Form extends Component {
 	render() {
 		let { form, currentIndex, answers } = this.state;
 		return (
-			<div>
-				<h1>{form.title}</h1>
-				<h3>{form.description}</h3>
+			<div className='form-container'>
+				<div className='meta'>
+					<h1>{form.title}</h1>
+					<h3>{form.description}</h3>
+				</div>
 				{form.fields && (
 					<form onSubmit={this.handleSubmit}>
 						<Question

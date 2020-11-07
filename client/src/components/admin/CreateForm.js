@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
+import Datetime from 'react-datetime';
 
 // Axios config
 Axios.defaults.baseURL = process.env.REACT_APP_SERVER;
@@ -21,10 +22,10 @@ export default class CreateForm extends Component {
 			e.preventDefault();
 
 			let answer = [];
-			if(e.target.option1.checked) answer.push(0);
-			if(e.target.option2.checked) answer.push(1);
-			if(e.target.option3.checked) answer.push(2);
-			if(e.target.option4.checked) answer.push(3);
+			if (e.target.option1.checked) answer.push(0);
+			if (e.target.option2.checked) answer.push(1);
+			if (e.target.option3.checked) answer.push(2);
+			if (e.target.option4.checked) answer.push(3);
 
 			let addedQ = {
 				type: 'single',
@@ -65,10 +66,10 @@ export default class CreateForm extends Component {
 			e.preventDefault();
 
 			let answer = [];
-			if(e.target.option1.checked) answer.push(0);
-			if(e.target.option2.checked) answer.push(1);
-			if(e.target.option3.checked) answer.push(2);
-			if(e.target.option4.checked) answer.push(3);
+			if (e.target.option1.checked) answer.push(0);
+			if (e.target.option2.checked) answer.push(1);
+			if (e.target.option3.checked) answer.push(2);
+			if (e.target.option4.checked) answer.push(3);
 
 			let addedQ = {
 				type: 'multiple',
@@ -155,6 +156,7 @@ export default class CreateForm extends Component {
 				</form>
 
 				<button onClick={this.createForm}> Create Form </button>
+				<Datetime />
 			</div>
 		);
 	}
