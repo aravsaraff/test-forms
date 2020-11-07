@@ -23,9 +23,10 @@ mongoose.connection.on('disconnected', () => {
 let exp = {};
 
 const UserSchema = new mongoose.Schema({
-	id: String,
-	username: String,
-	password: String
+	email: String,
+	name: String,
+	password: String,
+	access: Number
 });
 
 const FieldSchema = new mongoose.Schema({
