@@ -15,7 +15,8 @@ module.exports = (passport) => {
 	router.post('/checkForm', forms.checkForm);
 	router.get('/submittedForms', forms.fetchUserSubmissions);
 	router.get('/fetchForms', forms.fetchForms);
-	router.post('/fetResults', forms.fetchResults);
+	router.post('/fetchResults', forms.fetchResults);
+	router.post('/fetchUserResults', forms.fetchUserResults);
 
 	return router;
 };

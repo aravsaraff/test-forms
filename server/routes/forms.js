@@ -136,6 +136,7 @@ module.exports = () => {
 	exp.fetchResults = async (req, res) => {
 		try {
 			let id = req.body.id;
+			console.log(id);
 			let results = await db.Submission.find({ formId: id });
 			if (!results) return res.status(401).send('Error occurred.');
 			return res.status(200).send(results);
@@ -149,6 +150,20 @@ module.exports = () => {
 			let forms = await db.Submission.find({ userId: req.user.email });
 			if (!forms) return res.status(401).send('Error occurred.');
 			return res.status(200).send(forms);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	exp.fetchUserResults = async (req, res) => {
+		try {
+			let id = req.body.id;
+			console.log(id);
+			let results = await db.Submission.findOne({ userId: req.user.email, formId: id });
+			let form = await db.Form.findOne({ id: id });
+			if (!results) return res.status(401).send('Error occurred.');
+			console.log(form, results);
+			return res.status(200).send({ form: form, results: results });
 		} catch (err) {
 			console.log(err);
 		}

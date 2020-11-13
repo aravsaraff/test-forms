@@ -6,21 +6,24 @@ import { Table } from 'evergreen-ui';
 Axios.defaults.baseURL = process.env.REACT_APP_SERVER;
 Axios.defaults.withCredentials = true;
 
-export default class Admin extends Component {
+export default class Submissions extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			forms: []
+			formId: this.props.match.params.id,
+			submissions: []
 		};
 	}
 
 	async componentDidMount() {
 		try {
-			let forms = await Axios.get('/fetchForms');
-			if (forms.status === 200) {
-				console.log(forms.data);
-				this.setState({ forms: forms.data });
+			let resp = await Axios.post('/fetchResults', { id: this.state.formId });
+			if (resp.status === 200) {
+				console.log(resp.data);
+				this.setState({
+					submissions: resp.data
+				});
 			}
 		} catch (err) {
 			console.log(err);
@@ -28,30 +31,26 @@ export default class Admin extends Component {
 	}
 
 	render() {
-		let { forms } = this.state;
+		let { submissions } = this.state;
 		return (
-			<div className='admin-container'>
+			<div className='submissions-container'>
 				<Table className='submissions-table'>
 					<Table.Head>
 						<Table.TextHeaderCell flexBasis={300} flexShrink={0} flexGrow={0}>
-							Test ID
+							User
 						</Table.TextHeaderCell>
-						<Table.TextHeaderCell>Test Title</Table.TextHeaderCell>
+						<Table.TextHeaderCell>Score</Table.TextHeaderCell>
+						<Table.TextHeaderCell>Checked?</Table.TextHeaderCell>
 					</Table.Head>
 					<Table.Body>
-						{forms.map((form, ind) => {
+						{submissions.map((sub, ind) => {
 							return (
-								<Table.Row
-									key={ind}
-									isSelectable
-									onSelect={() => {
-										window.location.href = `/admin/submissions/${form.id}`;
-									}}
-								>
+								<Table.Row key={ind} isSelectable>
 									<Table.TextCell flexBasis={300} flexShrink={0} flexGrow={0}>
-										{form.id}
+										{sub.userId}
 									</Table.TextCell>
-									<Table.TextCell>{form.title}</Table.TextCell>
+									<Table.TextCell isNumber>{sub.score}</Table.TextCell>
+									<Table.TextCell>{sub.checked ? 'Yes' : 'No'}</Table.TextCell>
 								</Table.Row>
 							);
 						})}

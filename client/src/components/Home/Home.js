@@ -53,7 +53,13 @@ export default class Home extends Component {
 					<Table.Body>
 						{submittedForms.map((form, ind) => {
 							return (
-								<Table.Row key={ind} isSelectable onSelect={this.showSubmission(form)}>
+								<Table.Row
+									key={ind}
+									isSelectable
+									onSelect={() => {
+										window.location.href = `/submission/${form.formId}`;
+									}}
+								>
 									<Table.TextCell flexBasis={300} flexShrink={0} flexGrow={0}>
 										{form.formId}
 									</Table.TextCell>
