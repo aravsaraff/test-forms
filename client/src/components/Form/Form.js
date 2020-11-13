@@ -5,6 +5,7 @@ import './Form.scss';
 
 // Axios config
 Axios.defaults.baseURL = process.env.REACT_APP_SERVER;
+Axios.defaults.withCredentials = true;
 
 function Question(props) {
 	let { currentIndex, answers, field } = props;
@@ -128,6 +129,7 @@ function Question(props) {
 					id='answer'
 					value={typeof answers[currentIndex] === 'object' ? '' : answers[currentIndex]}
 					onChange={props.handleChange}
+					required
 				/>
 			</div>
 		);

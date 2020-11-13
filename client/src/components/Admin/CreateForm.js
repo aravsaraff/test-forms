@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
-import Datetime from 'react-datetime';
+// import Datetime from 'react-datetime';
 
 // Axios config
 Axios.defaults.baseURL = process.env.REACT_APP_SERVER;
@@ -143,7 +143,7 @@ export default class CreateForm extends Component {
 					<input type='submit' value='Add Subjective' />
 				</form>
 				<button onClick={this.createForm}> Create Form </button>
-				<Datetime />
+				{/* <Datetime /> */}
 			</div>
 		);
 	}

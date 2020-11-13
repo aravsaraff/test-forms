@@ -1,27 +1,33 @@
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const session = require('express-session');
+const cors = require('cors');
 const express = require('express');
+
+const routes = require('./routes')(passport);
+const redisStore = require('./config/redis')(session);
+
+require('dotenv').config();
 
 const app = express();
 
-const cors = require('cors');
+const sess = session({
+	resave: false,
+	saveUninitialized: false,
+	secret: 'process.env.SESS_KEY',
+	store: redisStore,
+	cookie: { maxAge: 365 * 24 * 60 * 60 * 1000 }
+});
+
 const corsOptions = {
 	origin: 'http://localhost:3000',
 	optionsSuccessStatus: 200,
 	credentials: true
 };
+
 app.use(cors(corsOptions));
-
-const expressSession = require('express-session')({
-	secret: 'secret',
-	resave: false,
-	saveUninitialized: false
-});
-app.use(expressSession);
-
-const routes = require('./routes')(passport);
-require('dotenv').config();
+app.use(sess);
 
 app.use(passport.initialize());
 app.use(passport.session());
