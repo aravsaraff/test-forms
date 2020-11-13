@@ -147,6 +147,7 @@ export default class Form extends Component {
 			answers: new Array(100).fill().map(function () {
 				return new Array(4).fill(false);
 			}),
+			message: '',
 			validId: false
 		};
 	}
@@ -156,10 +157,14 @@ export default class Form extends Component {
 			let resp = await Axios.post('/fetchForm', { id: this.state.id });
 			console.log(resp);
 			if (resp.status === 200) {
-				this.setState({
-					form: resp.data,
-					validId: true
-				});
+				if (resp.data.message) {
+					this.setState({ message: resp.data.message });
+				} else {
+					this.setState({
+						form: resp.data,
+						validId: true
+					});
+				}
 			}
 			console.log(this.state);
 		} catch (err) {
@@ -224,12 +229,13 @@ export default class Form extends Component {
 	};
 
 	render() {
-		let { form, currentIndex, answers } = this.state;
+		let { form, currentIndex, answers, message } = this.state;
 		return (
 			<div className='form-container'>
 				<div className='meta'>
 					<h1>{form.title}</h1>
 					<h3>{form.description}</h3>
+					<p>{message}</p>
 				</div>
 				{form.fields && (
 					<form onSubmit={this.handleSubmit}>
