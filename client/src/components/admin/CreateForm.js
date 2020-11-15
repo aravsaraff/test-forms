@@ -13,7 +13,9 @@ export default class CreateForm extends Component {
 			id: '',
 			title: '',
 			description: '',
-			formFields: []
+			formFields: [],
+			start: null,
+			end: null
 		};
 	}
 
@@ -103,8 +105,10 @@ export default class CreateForm extends Component {
 	};
 
 	render() {
+		let { formFields } = this.state;
 		return (
 			<div>
+
 				<form id='title-form' onSubmit={this.handleMeta}>
 					<input type='text' name='id' placeholder='Quiz Link' />
 					<input type='text' name='title' placeholder='Quiz Title' />
@@ -142,8 +146,13 @@ export default class CreateForm extends Component {
 					<input type='text' name='question' />
 					<input type='submit' value='Add Subjective' />
 				</form>
+
 				<button onClick={this.createForm}> Create Form </button>
-				<Datetime />
+
+				<Datetime onChange={(value) => this.setState({start: value.toDate() })} />
+
+				<Datetime onChange={(value) => this.setState({end: value.toDate() }) } />
+
 			</div>
 		);
 	}

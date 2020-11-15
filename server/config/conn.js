@@ -40,7 +40,9 @@ const FormSchema = new mongoose.Schema({
 	id: String,
 	title: String,
 	description: String,
-	fields: [FieldSchema]
+	fields: [FieldSchema],
+	start: Date,
+	end: Date
 });
 
 const SubmissionSchema = new mongoose.Schema({

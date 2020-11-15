@@ -145,6 +145,7 @@ export default class Form extends Component {
 			answers: new Array(100).fill().map(function () {
 				return new Array(4).fill(false);
 			}),
+			isActive: false,
 			validId: false
 		};
 	}
@@ -162,6 +163,23 @@ export default class Form extends Component {
 			console.log(this.state);
 		} catch (err) {
 			console.log(err);
+		}
+	}
+
+	async componentDidUpdate(prevProps, prevState) {
+		let { form, isActive } = this.state;
+		if(this.state.form !== prevState.form) {
+			let start = new Date(form.start).getTime() / 1000;
+			let end = new Date(form.end).getTime() / 1000;
+			let curr = new Date().getTime() / 1000;
+			if(start <= curr && curr < end) {
+				this.setState({ isActive: true});
+				setTimeout(async () => {
+					this.setState({ isActive: false});
+					let resp = await Axios.post('/checkForm', { id: this.state.id, answers: this.state.answers });
+					console.log(resp);
+				}, (end - curr) * 1000);
+			}
 		}
 	}
 
@@ -222,14 +240,14 @@ export default class Form extends Component {
 	};
 
 	render() {
-		let { form, currentIndex, answers } = this.state;
+		let { form, currentIndex, answers, isActive } = this.state;
 		return (
 			<div className='form-container'>
 				<div className='meta'>
 					<h1>{form.title}</h1>
 					<h3>{form.description}</h3>
 				</div>
-				{form.fields && (
+				{form.fields && isActive && (
 					<form onSubmit={this.handleSubmit}>
 						<Question
 							currentIndex={currentIndex}

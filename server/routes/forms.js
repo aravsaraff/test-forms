@@ -10,7 +10,9 @@ module.exports = () => {
 			let form = new db.Form({
 				id: formData.id,
 				title: formData.title,
-				description: formData.description
+				description: formData.description,
+				start: formData.start,
+				end: formData.end
 			});
 			await form.save();
 			formData.formFields.forEach(async (obj) => {
@@ -53,6 +55,8 @@ module.exports = () => {
 					id: 1,
 					title: 1,
 					description: 1,
+					start: 1,
+					end: 1,
 					'fields.type': 1,
 					'fields.question': 1,
 					'fields.options': 1
