@@ -126,7 +126,7 @@ module.exports = () => {
 	exp.fetchForms = async (req, res) => {
 		try {
 			let forms = await db.Form.find({}, { id: 1, title: 1 });
-			if (!forms) return res.status(401).send('Error occurred.');
+			if (!forms) return res.status(500).send('Error occurred.');
 			return res.status(200).send(forms);
 		} catch (err) {
 			console.log(err);
@@ -138,7 +138,7 @@ module.exports = () => {
 			let id = req.body.id;
 			console.log(id);
 			let results = await db.Submission.find({ formId: id });
-			if (!results) return res.status(401).send('Error occurred.');
+			if (!results) return res.status(500).send('Error occurred.');
 			return res.status(200).send(results);
 		} catch (err) {
 			console.log(err);
@@ -148,7 +148,7 @@ module.exports = () => {
 	exp.fetchUserSubmissions = async (req, res) => {
 		try {
 			let forms = await db.Submission.find({ userId: req.user.email });
-			if (!forms) return res.status(401).send('Error occurred.');
+			if (!forms) return res.status(500).send('Error occurred.');
 			return res.status(200).send(forms);
 		} catch (err) {
 			console.log(err);
@@ -161,7 +161,7 @@ module.exports = () => {
 			console.log(id);
 			let results = await db.Submission.findOne({ userId: req.user.email, formId: id });
 			let form = await db.Form.findOne({ id: id });
-			if (!results) return res.status(401).send('Error occurred.');
+			if (!results) return res.status(500).send('Error occurred.');
 			console.log(form, results);
 			return res.status(200).send({ form: form, results: results });
 		} catch (err) {
@@ -176,7 +176,7 @@ module.exports = () => {
 			console.log(id, user);
 			let results = await db.Submission.findOne({ userId: user, formId: id });
 			let form = await db.Form.findOne({ id: id });
-			if (!results) return res.status(401).send('Error occurred.');
+			if (!results) return res.status(500).send('Error occurred.');
 			console.log(form, results);
 			return res.status(200).send({ form: form, results: results });
 		} catch (err) {
@@ -192,7 +192,7 @@ module.exports = () => {
 
 			console.log(id, user);
 			let update = await db.Submission.findOneAndUpdate({ userId: user, formId: id }, { $inc: { score: marks } });
-			if (!update) return res.status(401).send('There was an error in updating.');
+			if (!update) return res.status(500).send('There was an error in updating.');
 			return res.status(200).send('Score successfully updated');
 		} catch (err) {
 			console.log(err);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
+import { Button } from 'evergreen-ui';
 import './Admin.scss';
 
 // Axios config
@@ -152,7 +153,7 @@ export default class Checking extends Component {
 	};
 
 	render() {
-		let { form, currentIndex, answers, message } = this.state;
+		let { form, currentIndex, answers } = this.state;
 		return (
 			<div className='form-container'>
 				<div className='meta'>
@@ -168,8 +169,12 @@ export default class Checking extends Component {
 							answers={answers}
 							handleMarks={this.handleMarks}
 						/>
-						<button onClick={this.decrementIndex}>Prev</button>
-						<button onClick={this.incrementIndex}>Next</button>
+						<Button appearance='minimal' onClick={this.decrementIndex}>
+							Prev
+						</Button>
+						<Button appearance='minimal' onClick={this.incrementIndex}>
+							Next
+						</Button>
 					</div>
 				)}
 			</div>

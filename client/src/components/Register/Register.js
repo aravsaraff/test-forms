@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
-import { Pane, TextInputField, Button } from 'evergreen-ui';
+import { Pane, TextInputField, Button, Heading, toaster } from 'evergreen-ui';
 import ReCAPTCHA from 'react-google-recaptcha';
 import './Register.scss';
 
@@ -31,6 +31,7 @@ export default class Register extends Component {
 			if (password !== passwordConfirmed) {
 				// Passwords don't match!
 				console.log("Passwords don't match.");
+				toaster.warning("Passwords don't match!");
 			} else {
 				let resp = await Axios.post('/register', {
 					name: firstName + ' ' + lastName,
@@ -51,7 +52,9 @@ export default class Register extends Component {
 			<div className='register-container'>
 				<Pane className='register-pane' elevation={1}>
 					<form onSubmit={this.handleSubmit}>
-						<h2>Register</h2>
+						<Heading size={700} margin='default'>
+							Register
+						</Heading>
 						<TextInputField
 							required
 							name='first_name'
