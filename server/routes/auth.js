@@ -19,8 +19,8 @@ module.exports = (passport) => {
 		return res.status(401).send('Not logged in.');
 	};
 
-	exp.access = (level) => (req, res, next) => {
-		if (req.user && req.user.access >= level) return next();
+	exp.access = (req, res, next) => {
+		if (req.user && req.user.access === 2) return next();
 		return res.status(403).send('Access Forbidden.');
 	};
 

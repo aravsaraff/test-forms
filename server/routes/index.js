@@ -11,12 +11,14 @@ module.exports = (passport) => {
 
 	// form routes
 	router.post('/createForm', forms.createForm);
-	router.post('/fetchForm', forms.fetchForm);
+	router.post('/fetchForm', auth.ensure, forms.fetchForm);
 	router.post('/checkForm', forms.checkForm);
-	router.get('/submittedForms', forms.fetchUserSubmissions);
-	router.get('/fetchForms', forms.fetchForms);
-	router.post('/fetchResults', forms.fetchResults);
-	router.post('/fetchUserResults', forms.fetchUserResults);
+	router.get('/submittedForms', auth.ensure, forms.fetchUserSubmissions);
+	router.get('/fetchForms', auth.access, forms.fetchForms);
+	router.post('/fetchResults', auth.access, forms.fetchResults);
+	router.post('/fetchUserResults', auth.ensure, forms.fetchUserResults);
+	router.post('/fetchUserResultsAdmin', auth.access, forms.fetchUserResultsAdmin);
+	router.post('/subjectiveMarking', auth.access, forms.subjectiveMarking);
 
 	return router;
 };

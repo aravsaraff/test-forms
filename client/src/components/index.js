@@ -7,3 +7,4 @@ export { default as Home } from './Home/Home';
 export { default as Submission } from './Submission/Submission';
 export { default as Admin } from './Admin/Admin';
 export { default as Submissions } from './Admin/Submissions';
+export { default as Checking } from './Admin/Checking';

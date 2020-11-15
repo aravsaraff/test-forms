@@ -168,5 +168,36 @@ module.exports = () => {
 			console.log(err);
 		}
 	};
+
+	exp.fetchUserResultsAdmin = async (req, res) => {
+		try {
+			let id = req.body.id;
+			let user = req.body.user;
+			console.log(id, user);
+			let results = await db.Submission.findOne({ userId: user, formId: id });
+			let form = await db.Form.findOne({ id: id });
+			if (!results) return res.status(401).send('Error occurred.');
+			console.log(form, results);
+			return res.status(200).send({ form: form, results: results });
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	exp.subjectiveMarking = async (req, res) => {
+		try {
+			let id = req.body.id;
+			let user = req.body.user;
+			let marks = req.body.marks;
+
+			console.log(id, user);
+			let update = await db.Submission.findOneAndUpdate({ userId: user, formId: id }, { $inc: { score: marks } });
+			if (!update) return res.status(401).send('There was an error in updating.');
+			return res.status(200).send('Score successfully updated');
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	return exp;
 };
