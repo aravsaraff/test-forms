@@ -68,12 +68,7 @@ function Question(props) {
 			<div id='subjective' className='form-pane' key={props.currentIndex}>
 				<div className='question'>{field.question}</div>
 
-				<input
-					type='text'
-					id='answer'
-					value={typeof answers[currentIndex] === 'object' ? '' : answers[currentIndex]}
-					readOnly
-				/>
+				<textarea id='answer' value={typeof answers[currentIndex] === 'object' ? '' : answers[currentIndex]} readOnly />
 			</div>
 		);
 	}

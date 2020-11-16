@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
-import { Button } from 'evergreen-ui';
+import { Button, toaster } from 'evergreen-ui';
 import './Admin.scss';
 
 // Axios config
@@ -147,6 +147,25 @@ export default class Checking extends Component {
 				marks: marksAwarded
 			});
 			console.log(resp.data);
+			if (resp.status === 200) {
+				toaster.success(resp.data);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	markChecked = async (e) => {
+		try {
+			e.preventDefault();
+			let resp = await Axios.post('/markChecked', {
+				id: this.state.id,
+				user: this.state.user
+			});
+			console.log(resp);
+			if (resp.status === 200) {
+				toaster.success(resp.data);
+			}
 		} catch (err) {
 			console.log(err);
 		}
@@ -174,6 +193,9 @@ export default class Checking extends Component {
 						</Button>
 						<Button appearance='minimal' onClick={this.incrementIndex}>
 							Next
+						</Button>
+						<Button appearance='primary' onClick={this.markChecked}>
+							Mark Form Checked
 						</Button>
 					</div>
 				)}

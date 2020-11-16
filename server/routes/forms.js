@@ -147,7 +147,7 @@ module.exports = () => {
 
 	exp.fetchUserSubmissions = async (req, res) => {
 		try {
-			let forms = await db.Submission.find({ userId: req.user.email });
+			let forms = await db.Submission.find({ userId: req.user.email, checked: true });
 			if (!forms) return res.status(500).send('Error occurred.');
 			return res.status(200).send(forms);
 		} catch (err) {
@@ -194,6 +194,18 @@ module.exports = () => {
 			let update = await db.Submission.findOneAndUpdate({ userId: user, formId: id }, { $inc: { score: marks } });
 			if (!update) return res.status(500).send('There was an error in updating.');
 			return res.status(200).send('Score successfully updated');
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	exp.markChecked = async (req, res) => {
+		try {
+			let id = req.body.id;
+			let user = req.body.user;
+			let update = await db.Submission.findOneAndUpdate({ userId: user, formId: id }, { $set: { checked: true } });
+			if (!update) return res.status(500).send('There was an error in updating.');
+			return res.status(200).send('Form marked as checked!');
 		} catch (err) {
 			console.log(err);
 		}

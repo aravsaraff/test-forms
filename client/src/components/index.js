@@ -8,3 +8,4 @@ export { default as Submission } from './Submission/Submission';
 export { default as Admin } from './Admin/Admin';
 export { default as Submissions } from './Admin/Submissions';
 export { default as Checking } from './Admin/Checking';
+export { default as NotFoundPage } from './NotFoundPage/NotFoundPage';

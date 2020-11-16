@@ -19,6 +19,7 @@ module.exports = (passport) => {
 	router.post('/fetchUserResults', auth.ensure, forms.fetchUserResults);
 	router.post('/fetchUserResultsAdmin', auth.access, forms.fetchUserResultsAdmin);
 	router.post('/subjectiveMarking', auth.access, forms.subjectiveMarking);
+	router.post('/markChecked', auth.access, forms.markChecked);
 
 	return router;
 };

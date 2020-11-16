@@ -9,7 +9,8 @@ import {
 	Admin,
 	Submissions,
 	Submission,
-	Checking
+	Checking,
+	NotFoundPage
 } from './components';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import './App.scss';
@@ -32,6 +33,9 @@ function App() {
 					<Route path='/admin/create' component={CreateForm} />
 					<Route exact path='/admin/submissions/:id' component={Submissions} />
 					<Route path='/admin/submissions/:id/:user' component={Checking} />
+
+					{/* 404 */}
+					<Route component={NotFoundPage} />
 				</Switch>
 			</div>
 		</Router>
