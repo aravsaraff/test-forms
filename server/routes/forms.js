@@ -62,7 +62,7 @@ module.exports = () => {
 			if (!form) {
 				return res.status(404).send('Form not found.');
 			}
-			let submitted = await db.Submission.findOne({ userId: req.user.email });
+			let submitted = await db.Submission.findOne({ userId: req.user.email, formId: id });
 			if (submitted) return res.status(200).send({ message: 'You have already submitted this form once.' });
 			//
 			return res.status(200).send(form);
