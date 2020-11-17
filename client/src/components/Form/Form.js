@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 // import Question from './Question';
 import Axios from 'axios';
+import Countdown from 'react-countdown';
 import './Form.scss';
 
 // Axios config
 Axios.defaults.baseURL = process.env.REACT_APP_SERVER;
+Axios.defaults.withCredentials = true;
 
 function Question(props) {
 	let { currentIndex, answers, field } = props;
@@ -128,6 +130,7 @@ function Question(props) {
 					id='answer'
 					value={typeof answers[currentIndex] === 'object' ? '' : answers[currentIndex]}
 					onChange={props.handleChange}
+					required
 				/>
 			</div>
 		);
@@ -146,6 +149,7 @@ export default class Form extends Component {
 				return new Array(4).fill(false);
 			}),
 			isActive: false,
+			message: '',
 			validId: false
 		};
 	}
@@ -155,10 +159,14 @@ export default class Form extends Component {
 			let resp = await Axios.post('/fetchForm', { id: this.state.id });
 			console.log(resp);
 			if (resp.status === 200) {
-				this.setState({
-					form: resp.data,
-					validId: true
-				});
+				if (resp.data.message) {
+					this.setState({ message: resp.data.message });
+				} else {
+					this.setState({
+						form: resp.data,
+						validId: true
+					});
+				}
 			}
 			console.log(this.state);
 		} catch (err) {
@@ -240,12 +248,13 @@ export default class Form extends Component {
 	};
 
 	render() {
-		let { form, currentIndex, answers, isActive } = this.state;
+		let { form, currentIndex, answers, message, isActive } = this.state;
 		return (
 			<div className='form-container'>
 				<div className='meta'>
 					<h1>{form.title}</h1>
 					<h3>{form.description}</h3>
+					<p>{message}</p>
 				</div>
 				{form.fields && isActive && (
 					<form onSubmit={this.handleSubmit}>
@@ -260,6 +269,7 @@ export default class Form extends Component {
 						<input type='submit' value='Submit' />
 					</form>
 				)}
+				<Countdown date={form.end} />
 			</div>
 		);
 	}

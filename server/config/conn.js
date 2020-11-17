@@ -26,6 +26,7 @@ const UserSchema = new mongoose.Schema({
 	email: String,
 	name: String,
 	password: String,
+	phone: String,
 	access: Number
 });
 
@@ -46,9 +47,11 @@ const FormSchema = new mongoose.Schema({
 });
 
 const SubmissionSchema = new mongoose.Schema({
+	userId: String,
 	formId: String,
 	answer: Array,
-	score: Number
+	score: Number,
+	checked: Boolean
 });
 
 exp.User = mongoose.model('User', UserSchema);

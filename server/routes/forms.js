@@ -66,6 +66,8 @@ module.exports = () => {
 			if (!form) {
 				return res.status(404).send('Form not found.');
 			}
+			let submitted = await db.Submission.findOne({ userId: req.user.email });
+			if (submitted) return res.status(200).send({ message: 'You have already submitted this form once.' });
 			//
 			return res.status(200).send(form);
 		} catch (err) {
@@ -75,6 +77,7 @@ module.exports = () => {
 
 	exp.checkForm = async (req, res) => {
 		try {
+			console.log(req.user);
 			let id = req.body.id;
 			let form = await db.Form.findOne(
 				{ id: id },
@@ -110,9 +113,11 @@ module.exports = () => {
 			console.log(userScore);
 
 			let submission = new db.Submission({
+				userId: req.user.email,
 				formId: id,
 				answer: userAnswers,
-				score: userScore
+				score: userScore,
+				checked: false
 			});
 			await submission.save();
 
@@ -122,7 +127,50 @@ module.exports = () => {
 		}
 	};
 
-	exp.fetchResult = async (req, res) => {};
+	exp.fetchForms = async (req, res) => {
+		try {
+			let forms = await db.Form.find({}, { id: 1, title: 1 });
+			if (!forms) return res.status(401).send('Error occurred.');
+			return res.status(200).send(forms);
+		} catch (err) {
+			console.log(err);
+		}
+	};
 
+	exp.fetchResults = async (req, res) => {
+		try {
+			let id = req.body.id;
+			console.log(id);
+			let results = await db.Submission.find({ formId: id });
+			if (!results) return res.status(401).send('Error occurred.');
+			return res.status(200).send(results);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	exp.fetchUserSubmissions = async (req, res) => {
+		try {
+			let forms = await db.Submission.find({ userId: req.user.email });
+			if (!forms) return res.status(401).send('Error occurred.');
+			return res.status(200).send(forms);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	exp.fetchUserResults = async (req, res) => {
+		try {
+			let id = req.body.id;
+			console.log(id);
+			let results = await db.Submission.findOne({ userId: req.user.email, formId: id });
+			let form = await db.Form.findOne({ id: id });
+			if (!results) return res.status(401).send('Error occurred.');
+			console.log(form, results);
+			return res.status(200).send({ form: form, results: results });
+		} catch (err) {
+			console.log(err);
+		}
+	};
 	return exp;
 };
