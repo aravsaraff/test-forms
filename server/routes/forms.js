@@ -12,7 +12,9 @@ module.exports = () => {
 				title: formData.title,
 				description: formData.description,
 				start: formData.start,
-				end: formData.end
+				end: formData.end,
+				positive: formData.positive,
+				negative: formData.negative
 			});
 			await form.save();
 			formData.formFields.forEach(async (obj) => {
@@ -66,7 +68,7 @@ module.exports = () => {
 			if (!form) {
 				return res.status(404).send('Form not found.');
 			}
-			let submitted = await db.Submission.findOne({ userId: req.user.email });
+			let submitted = await db.Submission.findOne({ userId: req.user.email, formId: id });
 			if (submitted) return res.status(200).send({ message: 'You have already submitted this form once.' });
 			//
 			return res.status(200).send(form);
@@ -85,6 +87,8 @@ module.exports = () => {
 					id: 1,
 					title: 1,
 					description: 1,
+					positive: 1,
+					negative: 1,
 					'fields.type': 1,
 					'fields.question': 1,
 					'fields.options': 1,
@@ -101,13 +105,13 @@ module.exports = () => {
 				if (obj.type === 'single') {
 					var i;
 					for (i = 0; userAnswers[ind][i] === obj.answer[i] && i < userAnswers[ind].length; i++);
-					if (i === userAnswers[ind].length) userScore += 4;
-					else userScore -= 1;
+					if (i === userAnswers[ind].length) userScore += form.positive;
+					else userScore -= form.negative;
 				} else if (obj.type === 'multiple') {
 					var i;
 					for (i = 0; userAnswers[ind][i] === obj.answer[i] && i < userAnswers[ind].length; i++);
-					if (i === userAnswers[ind].length) userScore += 4;
-					else userScore -= 1;
+					if (i === userAnswers[ind].length) userScore += form.positive;
+					else userScore -= form.negative;
 				}
 			});
 			console.log(userScore);
@@ -130,7 +134,7 @@ module.exports = () => {
 	exp.fetchForms = async (req, res) => {
 		try {
 			let forms = await db.Form.find({}, { id: 1, title: 1 });
-			if (!forms) return res.status(401).send('Error occurred.');
+			if (!forms) return res.status(500).send('Error occurred.');
 			return res.status(200).send(forms);
 		} catch (err) {
 			console.log(err);
@@ -142,7 +146,7 @@ module.exports = () => {
 			let id = req.body.id;
 			console.log(id);
 			let results = await db.Submission.find({ formId: id });
-			if (!results) return res.status(401).send('Error occurred.');
+			if (!results) return res.status(500).send('Error occurred.');
 			return res.status(200).send(results);
 		} catch (err) {
 			console.log(err);
@@ -151,8 +155,8 @@ module.exports = () => {
 
 	exp.fetchUserSubmissions = async (req, res) => {
 		try {
-			let forms = await db.Submission.find({ userId: req.user.email });
-			if (!forms) return res.status(401).send('Error occurred.');
+			let forms = await db.Submission.find({ userId: req.user.email, checked: true });
+			if (!forms) return res.status(500).send('Error occurred.');
 			return res.status(200).send(forms);
 		} catch (err) {
 			console.log(err);
@@ -165,12 +169,55 @@ module.exports = () => {
 			console.log(id);
 			let results = await db.Submission.findOne({ userId: req.user.email, formId: id });
 			let form = await db.Form.findOne({ id: id });
-			if (!results) return res.status(401).send('Error occurred.');
+			if (!results) return res.status(500).send('Error occurred.');
 			console.log(form, results);
 			return res.status(200).send({ form: form, results: results });
 		} catch (err) {
 			console.log(err);
 		}
 	};
+
+	exp.fetchUserResultsAdmin = async (req, res) => {
+		try {
+			let id = req.body.id;
+			let user = req.body.user;
+			console.log(id, user);
+			let results = await db.Submission.findOne({ userId: user, formId: id });
+			let form = await db.Form.findOne({ id: id });
+			if (!results) return res.status(500).send('Error occurred.');
+			console.log(form, results);
+			return res.status(200).send({ form: form, results: results });
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	exp.subjectiveMarking = async (req, res) => {
+		try {
+			let id = req.body.id;
+			let user = req.body.user;
+			let marks = req.body.marks;
+
+			console.log(id, user);
+			let update = await db.Submission.findOneAndUpdate({ userId: user, formId: id }, { $inc: { score: marks } });
+			if (!update) return res.status(500).send('There was an error in updating.');
+			return res.status(200).send('Score successfully updated');
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	exp.markChecked = async (req, res) => {
+		try {
+			let id = req.body.id;
+			let user = req.body.user;
+			let update = await db.Submission.findOneAndUpdate({ userId: user, formId: id }, { $set: { checked: true } });
+			if (!update) return res.status(500).send('There was an error in updating.');
+			return res.status(200).send('Form marked as checked!');
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	return exp;
 };

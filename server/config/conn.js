@@ -43,7 +43,9 @@ const FormSchema = new mongoose.Schema({
 	description: String,
 	fields: [FieldSchema],
 	start: Date,
-	end: Date
+	end: Date,
+	positive: Number,
+	negative: Number
 });
 
 const SubmissionSchema = new mongoose.Schema({

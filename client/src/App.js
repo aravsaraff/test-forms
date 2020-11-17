@@ -1,5 +1,17 @@
 import React from 'react';
-import { CreateForm, Form, Login, Register, Header, Home, Admin, Submissions, Submission } from './components';
+import {
+	CreateForm,
+	Form,
+	Login,
+	Register,
+	Header,
+	Home,
+	Admin,
+	Submissions,
+	Submission,
+	Checking,
+	NotFoundPage
+} from './components';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import './App.scss';
 
@@ -19,7 +31,11 @@ function App() {
 					{/* Admin Routes */}
 					<Route path='/admin/home' component={Admin} />
 					<Route path='/admin/create' component={CreateForm} />
-					<Route path='/admin/submissions/:id' component={Submissions} />
+					<Route exact path='/admin/submissions/:id' component={Submissions} />
+					<Route path='/admin/submissions/:id/:user' component={Checking} />
+
+					{/* 404 */}
+					<Route component={NotFoundPage} />
 				</Switch>
 			</div>
 		</Router>

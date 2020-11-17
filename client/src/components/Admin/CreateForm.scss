@@ -1,0 +1,45 @@
+.main-container {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    overflow: auto;
+    // justify-content: center;
+    .created-form {
+        overflow-y: scroll;
+        overflow-x: auto;
+        flex-basis: 50%;
+        text-align: left;
+        .created-form-meta {
+            margin: 30px 10px;
+            div {
+                margin: 10px;
+            }
+        }
+    }
+    .form-fields {
+        text-align: left;
+        overflow-y: scroll;
+        overflow-x: auto;
+        flex-basis: 50%;
+        .time {
+            margin: 20px;
+        }
+        .create-button {
+            color: #ffffff;
+            font-size: 16px;
+            width: 150px;
+            margin: 20px 38%;
+            background-color: #51a04f;
+            box-shadow: 2px 2px 5px #000000;
+            padding: 10px;
+        }
+    }
+    form {
+        margin: 20px;
+        display: flex;
+        flex-flow: column nowrap;
+        input {
+            margin: 5px 2px;
+        }
+    }
+}

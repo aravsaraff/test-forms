@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Pane, TextInputField, Button, Text, Link } from 'evergreen-ui';
+import { Pane, TextInputField, Button, Text, Link, toaster, Heading } from 'evergreen-ui';
 import './Login.scss';
 import Axios from 'axios';
 
@@ -14,6 +14,12 @@ export default class Login extends Component {
 			email: '',
 			password: ''
 		};
+	}
+
+	async componentDidMount() {
+		if (new URLSearchParams(this.props.location.search).get('status') === 'false') {
+			toaster.warning('Please login first.');
+		}
 	}
 
 	handleSubmit = async (e) => {
@@ -38,7 +44,9 @@ export default class Login extends Component {
 			<div className='login-container'>
 				<Pane className='login-pane' elevation={1}>
 					<form onSubmit={this.handleSubmit}>
-						<h2>Login</h2>
+						<Heading size={700} margin='default'>
+							Login
+						</Heading>
 						<TextInputField
 							required
 							name='email'

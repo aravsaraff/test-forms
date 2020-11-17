@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
+import { Button } from 'evergreen-ui';
 import './Submission.scss';
 
 // Axios config
@@ -67,12 +68,7 @@ function Question(props) {
 			<div id='subjective' className='form-pane' key={props.currentIndex}>
 				<div className='question'>{field.question}</div>
 
-				<input
-					type='text'
-					id='answer'
-					value={typeof answers[currentIndex] === 'object' ? '' : answers[currentIndex]}
-					readOnly
-				/>
+				<textarea id='answer' value={typeof answers[currentIndex] === 'object' ? '' : answers[currentIndex]} readOnly />
 			</div>
 		);
 	}
@@ -131,7 +127,7 @@ export default class Submission extends Component {
 	}
 
 	render() {
-		let { form, currentIndex, answers, message } = this.state;
+		let { form, currentIndex, answers } = this.state;
 		return (
 			<div className='form-container'>
 				<div className='meta'>
@@ -142,8 +138,12 @@ export default class Submission extends Component {
 				{form.fields && (
 					<form>
 						<Question currentIndex={currentIndex} field={form.fields[currentIndex]} answers={answers} />
-						<button onClick={this.decrementIndex}>Prev</button>
-						<button onClick={this.incrementIndex}>Next</button>
+						<Button appearance='minimal' onClick={this.decrementIndex}>
+							Prev
+						</Button>
+						<Button appearance='minimal' onClick={this.incrementIndex}>
+							Next
+						</Button>
 					</form>
 				)}
 			</div>

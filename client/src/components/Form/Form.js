@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 // import Question from './Question';
+import { Button, Heading, Paragraph, Pane, Dialog } from 'evergreen-ui';
 import Axios from 'axios';
 import Countdown from 'react-countdown';
 import './Form.scss';
@@ -7,6 +8,18 @@ import './Form.scss';
 // Axios config
 Axios.defaults.baseURL = process.env.REACT_APP_SERVER;
 Axios.defaults.withCredentials = true;
+Axios.interceptors.response.use(
+	(response) => {
+		return response;
+	},
+	(error) => {
+		if (error.response.status === 401) {
+			console.log('Not Authorized.');
+			window.location.href = '/login?status=false';
+		}
+		return error;
+	}
+);
 
 function Question(props) {
 	let { currentIndex, answers, field } = props;
@@ -14,8 +27,8 @@ function Question(props) {
 
 	if (field.type === 'single') {
 		return (
-			<div id='single' className='form-pane' key={currentIndex}>
-				<div className='question'>{field.question}</div>
+			<Pane elevation={1} id='single' className='form-pane' key={currentIndex}>
+				<Paragraph className='question'>{field.question}</Paragraph>
 
 				<div className='option'>
 					<input
@@ -64,12 +77,12 @@ function Question(props) {
 					/>
 					<label htmlFor='op4'>{field.options[3]}</label>
 				</div>
-			</div>
+			</Pane>
 		);
 	} else if (field.type === 'multiple') {
 		return (
-			<div id='multiple' className='form-pane' key={currentIndex}>
-				<div className='question'>{field.question}</div>
+			<Pane elevation={1} id='multiple' className='form-pane' key={currentIndex}>
+				<Paragraph className='question'>{field.question}</Paragraph>
 
 				<div className='option'>
 					<input
@@ -118,21 +131,20 @@ function Question(props) {
 					/>
 					<label htmlFor='op4'>{field.options[3]}</label>
 				</div>
-			</div>
+			</Pane>
 		);
 	} else {
 		return (
-			<div id='subjective' className='form-pane' key={props.currentIndex}>
-				<div className='question'>{field.question}</div>
+			<Pane elevation={1} id='subjective' className='form-pane' key={props.currentIndex}>
+				<Paragraph className='question'>{field.question}</Paragraph>
 
-				<input
-					type='text'
+				<textarea
 					id='answer'
 					value={typeof answers[currentIndex] === 'object' ? '' : answers[currentIndex]}
 					onChange={props.handleChange}
 					required
 				/>
-			</div>
+			</Pane>
 		);
 	}
 }
@@ -150,28 +162,25 @@ export default class Form extends Component {
 			}),
 			isActive: false,
 			message: '',
-			validId: false
+			validId: false,
+			isConfirm: false
 		};
 	}
 
 	async componentDidMount() {
-		try {
-			let resp = await Axios.post('/fetchForm', { id: this.state.id });
-			console.log(resp);
-			if (resp.status === 200) {
-				if (resp.data.message) {
-					this.setState({ message: resp.data.message });
-				} else {
-					this.setState({
-						form: resp.data,
-						validId: true
-					});
-				}
+		let resp = await Axios.post('/fetchForm', { id: this.state.id });
+		console.log(resp);
+		if (resp.status === 200) {
+			if (resp.data.message) {
+				this.setState({ message: resp.data.message });
+			} else {
+				this.setState({
+					form: resp.data,
+					validId: true
+				});
 			}
-			console.log(this.state);
-		} catch (err) {
-			console.log(err);
 		}
+		console.log(this.state);
 	}
 
 	async componentDidUpdate(prevProps, prevState) {
@@ -198,6 +207,7 @@ export default class Form extends Component {
 			console.log(answers);
 			let resp = await Axios.post('/checkForm', { id: this.state.id, answers: answers });
 			console.log(resp.data);
+			window.location.href = '/';
 		} catch (err) {
 			console.log(err);
 		}
@@ -247,29 +257,72 @@ export default class Form extends Component {
 		}
 	};
 
+	renderCountdown = () => {
+		let { start, end } = this.state.form;
+		if(Date.now() < new Date(start))
+			return <div>Starts in: <Countdown date={new Date(start)} daysInHours /></div>
+		else if(Date.now() < new Date(end))
+			return <div>Ends in: <Countdown date={new Date(end)} daysInHours /></div>
+	}
+
 	render() {
-		let { form, currentIndex, answers, message, isActive } = this.state;
+		let { form, currentIndex, answers, message, isActive, isConfirm } = this.state;
 		return (
 			<div className='form-container'>
+				<Dialog
+					isShown={isConfirm}
+					title='Are you sure?'
+					onCloseComplete={() => this.setState({ isConfirm: false })}
+					hasFooter={false}
+				>
+					<Paragraph margin='default'>Are you sure you want to submit? This process cannot be reverted.</Paragraph>
+					<Button
+						marginRight={16}
+						appearance='primary'
+						intent='danger'
+						onClick={() => this.setState({ isConfirm: false })}
+					>
+						Cancel
+					</Button>
+					<Button type='submit' form='test-form' appearance='primary'>
+						Submit
+					</Button>
+				</Dialog>
 				<div className='meta'>
-					<h1>{form.title}</h1>
-					<h3>{form.description}</h3>
+					<Heading size={900} margin='default'>
+						{form.title}
+					</Heading>
+					<Heading size={700} margin='default'>
+						{form.description}
+					</Heading>
 					<p>{message}</p>
 				</div>
 				{form.fields && isActive && (
-					<form onSubmit={this.handleSubmit}>
+					<form onSubmit={this.handleSubmit} id='test-form'>
 						<Question
 							currentIndex={currentIndex}
 							field={form.fields[currentIndex]}
 							handleChange={this.handleChange}
 							answers={answers}
 						/>
-						<button onClick={this.decrementIndex}>Prev</button>
-						<button onClick={this.incrementIndex}>Next</button>
-						<input type='submit' value='Submit' />
+						<Button appearance='minimal' onClick={this.decrementIndex}>
+							Prev
+						</Button>
+						<Button appearance='minimal' onClick={this.incrementIndex}>
+							Next
+						</Button>
+						<Button
+							appearance='default'
+							onClick={(e) => {
+								e.preventDefault();
+								this.setState({ isConfirm: true });
+							}}
+						>
+							Submit
+						</Button>
 					</form>
 				)}
-				<Countdown date={form.end} />
+				{this.renderCountdown()}
 			</div>
 		);
 	}

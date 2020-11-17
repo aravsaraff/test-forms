@@ -7,18 +7,21 @@
 	height: 48px;
 	background: $bgDark;
 	color: $textLight;
-	justify-content: space-around;
+	justify-content: space-between;
 	align-items: center;
 }
 
 .nav-logo {
 	height: 38px;
+	margin: 0 50px;
 }
 
 .nav-btns {
+	margin: 0 50px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	justify-content: space-between;
 }
 
 .nav-login-btn,

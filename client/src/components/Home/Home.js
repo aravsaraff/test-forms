@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
-import { Table } from 'evergreen-ui';
+import { Table, Heading } from 'evergreen-ui';
 import { Submission } from '../../components';
 import './Home.scss';
 
@@ -42,6 +42,9 @@ export default class Home extends Component {
 		let { submittedForms } = this.state;
 		return (
 			<div className='home-container'>
+				<Heading size={500} margin='default'>
+					Submitted Forms
+				</Heading>
 				<Table className='submissions-table'>
 					<Table.Head>
 						<Table.TextHeaderCell flexBasis={300} flexShrink={0} flexGrow={0}>

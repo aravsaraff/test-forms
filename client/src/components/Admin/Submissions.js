@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
-import { Table } from 'evergreen-ui';
+import { Table, Heading } from 'evergreen-ui';
 
 // Axios config
 Axios.defaults.baseURL = process.env.REACT_APP_SERVER;
@@ -31,12 +31,15 @@ export default class Submissions extends Component {
 	}
 
 	render() {
-		let { submissions } = this.state;
+		let { submissions, formId } = this.state;
 		return (
 			<div className='submissions-container'>
+				<Heading size={500} margin='default'>
+					Submitted Forms
+				</Heading>
 				<Table className='submissions-table'>
 					<Table.Head>
-						<Table.TextHeaderCell flexBasis={300} flexShrink={0} flexGrow={0}>
+						<Table.TextHeaderCell flexBasis={500} flexShrink={0} flexGrow={0}>
 							User
 						</Table.TextHeaderCell>
 						<Table.TextHeaderCell>Score</Table.TextHeaderCell>
@@ -45,8 +48,14 @@ export default class Submissions extends Component {
 					<Table.Body>
 						{submissions.map((sub, ind) => {
 							return (
-								<Table.Row key={ind} isSelectable>
-									<Table.TextCell flexBasis={300} flexShrink={0} flexGrow={0}>
+								<Table.Row
+									key={ind}
+									isSelectable
+									onSelect={() => {
+										window.location.href = `/admin/submissions/${formId}/${sub.userId}`;
+									}}
+								>
+									<Table.TextCell flexBasis={500} flexShrink={0} flexGrow={0}>
 										{sub.userId}
 									</Table.TextCell>
 									<Table.TextCell isNumber>{sub.score}</Table.TextCell>

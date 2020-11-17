@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar, Button, Popover, Menu, Position } from 'evergreen-ui';
-// import { banner } from '../../assets';
+import banner from '../../assets/banner.png';
 import './Header.scss';
 import Axios from 'axios';
 
@@ -26,6 +26,11 @@ function Nav(props) {
 	} else {
 		return (
 			<div className='nav-btns'>
+				<Link to='/'>
+					<Button appearance='minimal' className='nav-register-btn'>
+						Home
+					</Button>
+				</Link>
 				<Popover
 					position={Position.BOTTOM_LEFT}
 					content={
@@ -60,7 +65,7 @@ export default class Header extends Component {
 	render() {
 		return (
 			<div className='nav-container'>
-				{/* <img src={banner} className='nav-logo' alt='banner' /> */}
+				<img src={banner} className='nav-logo' alt='banner' />
 				<Nav logout={this.logout} />
 			</div>
 		);

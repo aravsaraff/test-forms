@@ -2,7 +2,6 @@ const db = require('../config/conn');
 const axios = require('axios');
 const bcrypt = require('bcryptjs');
 const path = require('path');
-const { User } = require('../config/conn');
 
 const RECAPTCHA_SECRET = '6LfnPuEZAAAAAI0q84fCdhUUx09LtHYdPvaZ5pP_';
 
@@ -19,8 +18,8 @@ module.exports = (passport) => {
 		return res.status(401).send('Not logged in.');
 	};
 
-	exp.access = (level) => (req, res, next) => {
-		if (req.user && req.user.access >= level) return next();
+	exp.access = (req, res, next) => {
+		if (req.user && req.user.access === 2) return next();
 		return res.status(403).send('Access Forbidden.');
 	};
 
@@ -32,8 +31,8 @@ module.exports = (passport) => {
 					response: req.body.token
 				}
 			});
-			console.log(captchaResp.data);
-			if (captchaResp.success === false) return res.status(500).send('Captcha failed.');
+			console.log(captchaResp.data.success);
+			if (captchaResp.data.success === false) return res.status(500).send('Captcha failed.');
 			let userExists = await db.User.findOne({
 				where: { email: req.body.email }
 			});
@@ -46,10 +45,10 @@ module.exports = (passport) => {
 				email: req.body.email,
 				phone: req.body.phone,
 				password: hash,
-				access: 1
+				access: 2
 			});
 			await userData.save();
-			return res.status(200).send('Successfully registered ' + userData.email);
+			return res.status(200).send('Successfully registered ' + req.body.email);
 		} catch (err) {
 			console.log(err);
 			return res.status(500).send(err);
@@ -59,9 +58,9 @@ module.exports = (passport) => {
 	exp.login = async (req, res) => {
 		try {
 			let user = await db.User.findOne({ email: req.body.email });
-			if (!user) return res.status(401).send('Invalid email or password.');
+			if (!user) return res.status(403).send('Invalid email or password.');
 			let check = await bcrypt.compare(req.body.password, user.password);
-			if (!check) return res.status(401).send('Invalid email or password.');
+			if (!check) return res.status(403).send('Invalid email or password.');
 			req.login(user, (err) => {
 				if (err) res.status(401).send(err);
 				console.log('Login success.');
