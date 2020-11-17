@@ -52,7 +52,7 @@ export default class Home extends Component {
 							Form
 						</Table.TextHeaderCell>
 						<Table.TextHeaderCell>Score</Table.TextHeaderCell>
-						<Table.TextHeaderCell>Checked?</Table.TextHeaderCell>
+						{/* <Table.TextHeaderCell>Checked?</Table.TextHeaderCell> */}
 					</Table.Head>
 					<Table.Body>
 						{submittedForms.map((form, ind) => {
@@ -69,7 +69,7 @@ export default class Home extends Component {
 										{form.formId}
 									</Table.TextCell>
 									<Table.TextCell isNumber>{form.score}</Table.TextCell>
-									<Table.TextCell>{form.checked ? 'Yes' : 'No'}</Table.TextCell>
+									{/* <Table.TextCell>{form.checked ? 'Yes' : 'No'}</Table.TextCell> */}
 								</Table.Row>
 							);
 						})}
