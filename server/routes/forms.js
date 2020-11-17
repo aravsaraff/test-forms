@@ -7,6 +7,54 @@ module.exports = () => {
 		try {
 			console.log(req.body);
 			let formData = req.body;
+			let existingForm = await db.Form.findOne({ id: formData.id });
+			if (existingForm) return res.status(409).send('A form already exists with this id.');
+			let form = new db.Form({
+				id: formData.id,
+				title: formData.title,
+				description: formData.description,
+				start: formData.start,
+				end: formData.end,
+				positive: formData.positive,
+				negative: formData.negative
+			});
+			await form.save();
+			formData.formFields.forEach(async (obj) => {
+				let field;
+				if (obj.type === 'single' || obj.type === 'multiple') {
+					field = new db.Field({
+						type: obj.type,
+						question: obj.question,
+						options: obj.options,
+						answer: obj.answer
+					});
+				} else {
+					field = new db.Field({
+						type: obj.type,
+						question: obj.question
+					});
+				}
+				await db.Form.findOneAndUpdate(
+					{ id: formData.id },
+					{
+						$push: {
+							fields: field
+						}
+					}
+				);
+			});
+			return res.status(200).send('Success!');
+		} catch (err) {
+			console.log(err);
+			return res.send(err);
+		}
+	};
+
+	exp.updateForm = async (req, res) => {
+		try {
+			console.log(req.body);
+			let formData = req.body;
+			let exists = await db.Form.deleteOne({ id: formData.id });
 			let form = new db.Form({
 				id: formData.id,
 				title: formData.title,
@@ -70,6 +118,21 @@ module.exports = () => {
 			}
 			let submitted = await db.Submission.findOne({ userId: req.user.email, formId: id });
 			if (submitted) return res.status(200).send({ message: 'You have already submitted this form once.' });
+			//
+			return res.status(200).send(form);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	exp.fetchFormAdmin = async (req, res) => {
+		try {
+			let id = req.body.id;
+			let form = await db.Form.findOne({ id: id });
+			console.log(form);
+			if (!form) {
+				return res.status(404).send('Form not found.');
+			}
 			//
 			return res.status(200).send(form);
 		} catch (err) {

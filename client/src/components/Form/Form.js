@@ -184,15 +184,15 @@ export default class Form extends Component {
 	}
 
 	async componentDidUpdate(prevProps, prevState) {
-		let { form, isActive } = this.state;
-		if(this.state.form !== prevState.form) {
+		let { form } = this.state;
+		if (this.state.form !== prevState.form) {
 			let start = new Date(form.start).getTime() / 1000;
 			let end = new Date(form.end).getTime() / 1000;
 			let curr = new Date().getTime() / 1000;
-			if(start <= curr && curr < end) {
-				this.setState({ isActive: true});
+			if (start <= curr && curr < end) {
+				this.setState({ isActive: true });
 				setTimeout(async () => {
-					this.setState({ isActive: false});
+					this.setState({ isActive: false });
 					let resp = await Axios.post('/checkForm', { id: this.state.id, answers: this.state.answers });
 					console.log(resp);
 				}, (end - curr) * 1000);
@@ -259,11 +259,19 @@ export default class Form extends Component {
 
 	renderCountdown = () => {
 		let { start, end } = this.state.form;
-		if(Date.now() < new Date(start))
-			return <div>Starts in: <Countdown date={new Date(start)} daysInHours /></div>
-		else if(Date.now() < new Date(end))
-			return <div>Ends in: <Countdown date={new Date(end)} daysInHours /></div>
-	}
+		if (Date.now() < new Date(start))
+			return (
+				<div>
+					Starts in: <Countdown date={new Date(start)} daysInHours />
+				</div>
+			);
+		else if (Date.now() < new Date(end))
+			return (
+				<div>
+					Ends in: <Countdown date={new Date(end)} daysInHours />
+				</div>
+			);
+	};
 
 	render() {
 		let { form, currentIndex, answers, message, isActive, isConfirm } = this.state;

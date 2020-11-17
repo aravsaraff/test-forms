@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar, Button, Popover, Menu, Position } from 'evergreen-ui';
-import banner from '../../assets/banner.png';
+import { banner } from '../../assets';
 import './Header.scss';
 import Axios from 'axios';
 

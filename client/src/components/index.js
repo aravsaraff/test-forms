@@ -1,4 +1,5 @@
 export { default as CreateForm } from './Admin/CreateForm';
+export { default as EditForm } from './Admin/EditForm';
 export { default as Form } from './Form/Form';
 export { default as Login } from './Login/Login';
 export { default as Register } from './Register/Register';
