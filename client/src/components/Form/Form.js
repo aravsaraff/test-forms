@@ -184,7 +184,7 @@ export default class Form extends Component {
 		resp = await Axios.get('/time');
 		if (resp.status === 200)
 			this.setState({ time: new Date(resp.data).getTime() / 1000 })
-		// else this.setState({ time: new Date().getTime() / 1000 })
+		else this.setState({ time: new Date().getTime() / 1000 })
 		console.log(this.state);
 	}
 
