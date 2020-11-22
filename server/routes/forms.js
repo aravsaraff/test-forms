@@ -219,5 +219,16 @@ module.exports = () => {
 		}
 	};
 
+	exp.getTime = async (req, res) => {
+		try {
+			let date = new Date;
+			console.log(date);
+			return res.status(200).send(date);
+		} catch (err) {
+			console.log(err);
+			return res.status(500).send(err);
+		}
+	}
+
 	return exp;
 };

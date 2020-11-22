@@ -163,7 +163,8 @@ export default class Form extends Component {
 			isActive: false,
 			message: '',
 			validId: false,
-			isConfirm: false
+			isConfirm: false,
+			time: null
 		};
 	}
 
@@ -180,16 +181,25 @@ export default class Form extends Component {
 				});
 			}
 		}
+		resp = await Axios.get('/time');
+		if (resp.status === 200)
+			this.setState({ time: new Date(resp.data).getTime() / 1000 })
+		// else this.setState({ time: new Date().getTime() / 1000 })
 		console.log(this.state);
 	}
 
 	async componentDidUpdate(prevProps, prevState) {
-		let { form, isActive } = this.state;
-		if(this.state.form !== prevState.form) {
+		let { form, isActive, time } = this.state;
+		if(this.state.time !== prevState.time && this.state.form) {
 			let start = new Date(form.start).getTime() / 1000;
 			let end = new Date(form.end).getTime() / 1000;
-			let curr = new Date().getTime() / 1000;
-			if(start <= curr && curr < end) {
+			let curr = time;
+			console.log(curr);
+			if(curr < start)
+				setTimeout(() => {
+					this.setState({ isActive: true })
+				}, (start - curr) * 1000);
+			else if(start <= curr && curr < end) {
 				this.setState({ isActive: true});
 				setTimeout(async () => {
 					this.setState({ isActive: false});

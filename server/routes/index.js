@@ -21,5 +21,8 @@ module.exports = (passport) => {
 	router.post('/subjectiveMarking', auth.access, forms.subjectiveMarking);
 	router.post('/markChecked', auth.access, forms.markChecked);
 
+	// time route
+	router.get('/time', forms.getTime);
+
 	return router;
 };
