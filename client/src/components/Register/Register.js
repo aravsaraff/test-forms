@@ -26,7 +26,13 @@ export default class Register extends Component {
 	handleSubmit = async (e) => {
 		try {
 			e.preventDefault();
-			const { firstName, lastName, email, password, passwordConfirmed, phone } = this.state;
+			let { firstName, lastName, email, password, passwordConfirmed, phone } = this.state;
+			firstName = firstName.trim();
+			lastName = lastName.trim();
+			email = email.trim();
+			password = password.trim();
+			passwordConfirmed = passwordConfirmed.trim();
+			phone = phone.trim();
 			const token = await recaptchaRef.current.executeAsync();
 			if (password !== passwordConfirmed) {
 				// Passwords don't match!

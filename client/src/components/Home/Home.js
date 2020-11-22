@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import { Table, Heading } from 'evergreen-ui';
 import { Submission } from '../../components';
+import { withRouter } from 'react-router-dom';
 import './Home.scss';
 
 // Axios config
@@ -43,7 +44,7 @@ export default class Home extends Component {
 		return (
 			<div className='home-container'>
 				<Heading size={500} margin='default'>
-					Submitted Forms
+					Checked Forms
 				</Heading>
 				<Table className='submissions-table'>
 					<Table.Head>
@@ -51,7 +52,7 @@ export default class Home extends Component {
 							Form
 						</Table.TextHeaderCell>
 						<Table.TextHeaderCell>Score</Table.TextHeaderCell>
-						<Table.TextHeaderCell>Checked?</Table.TextHeaderCell>
+						{/* <Table.TextHeaderCell>Checked?</Table.TextHeaderCell> */}
 					</Table.Head>
 					<Table.Body>
 						{submittedForms.map((form, ind) => {
@@ -60,14 +61,15 @@ export default class Home extends Component {
 									key={ind}
 									isSelectable
 									onSelect={() => {
-										window.location.href = `/submission/${form.formId}`;
+										// window.location.href = `/submission/${form.formId}`;
+										this.props.history.push(`/submission/${form.formId}`);
 									}}
 								>
 									<Table.TextCell flexBasis={300} flexShrink={0} flexGrow={0}>
 										{form.formId}
 									</Table.TextCell>
 									<Table.TextCell isNumber>{form.score}</Table.TextCell>
-									<Table.TextCell>{form.checked ? 'Yes' : 'No'}</Table.TextCell>
+									{/* <Table.TextCell>{form.checked ? 'Yes' : 'No'}</Table.TextCell> */}
 								</Table.Row>
 							);
 						})}

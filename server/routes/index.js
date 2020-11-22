@@ -11,6 +11,7 @@ module.exports = (passport) => {
 
 	// form routes
 	router.post('/createForm', forms.createForm);
+	router.post('/updateForm', forms.updateForm);
 	router.post('/fetchForm', auth.ensure, forms.fetchForm);
 	router.post('/checkForm', forms.checkForm);
 	router.get('/submittedForms', auth.ensure, forms.fetchUserSubmissions);
@@ -20,6 +21,7 @@ module.exports = (passport) => {
 	router.post('/fetchUserResultsAdmin', auth.access, forms.fetchUserResultsAdmin);
 	router.post('/subjectiveMarking', auth.access, forms.subjectiveMarking);
 	router.post('/markChecked', auth.access, forms.markChecked);
+	router.post('/fetchFormAdmin', auth.access, forms.fetchFormAdmin);
 
 	// time route
 	router.get('/time', forms.getTime);

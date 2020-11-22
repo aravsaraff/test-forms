@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import Datetime from 'react-datetime';
 import { toaster } from 'evergreen-ui';
-import './CreateForm.scss';
+import './EditForm.scss';
 
 // Axios config
 Axios.defaults.baseURL = process.env.REACT_APP_SERVER;
 
-export default class CreateForm extends Component {
+export default class EditForm extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			id: '',
+			id: this.props.match.params.id,
 			title: '',
 			description: '',
 			formFields: [],
@@ -21,6 +21,23 @@ export default class CreateForm extends Component {
 			positive: null,
 			negative: null
 		};
+	}
+
+	async componentDidMount() {
+		let resp = await Axios.post('/fetchFormAdmin', { id: this.state.id });
+		if (resp.status === 200) {
+			let form = resp.data;
+			console.log(form);
+			this.setState({
+				title: form.title,
+				description: form.description,
+				formFields: form.fields,
+				start: form.start,
+				end: form.end,
+				positive: form.positive,
+				negative: form.negative
+			});
+		}
 	}
 
 	editSingle = (e, ind) => {
@@ -138,7 +155,6 @@ export default class CreateForm extends Component {
 		try {
 			e.preventDefault();
 			this.setState({
-				id: e.target.id.value,
 				title: e.target.title.value,
 				description: e.target.description.value
 			});
@@ -158,10 +174,10 @@ export default class CreateForm extends Component {
 	createForm = async (e) => {
 		try {
 			e.preventDefault();
-			const resp = await Axios.post('/createForm', this.state);
+			const resp = await Axios.post('/updateForm', this.state);
 			if (resp.status === 200) {
-				console.log('Successfully created form.');
-				toaster.success('Successfully created form.');
+				console.log('Successfully updated form.');
+				toaster.success('Successfully updated form.');
 			}
 		} catch (err) {
 			console.log(err);
@@ -212,89 +228,89 @@ export default class CreateForm extends Component {
 					<div className='created-form-questions'>
 						Questions <br />
 						<ol>
-							{formFields.map((ele, idx) => {
-								if (ele.type === 'single')
-									return (
-										<li>
-											<form id='single-form' onSubmit={(e) => this.editSingle(e, idx)}>
-												<input type='text' name='question' defaultValue={ele.question} />
-												<div>
-													<input type='radio' id='option1' name='correct' defaultChecked={ele.answer[0]} />
-													<input type='text' name='single_option1' defaultValue={ele.options[0]} />
-												</div>
-												<div>
-													<input type='radio' id='option2' name='correct' defaultChecked={ele.answer[1]} />
-													<input type='text' name='single_option2' defaultValue={ele.options[1]} />
-												</div>
-												<div>
-													<input type='radio' id='option3' name='correct' defaultChecked={ele.answer[2]} />
-													<input type='text' name='single_option3' defaultValue={ele.options[2]} />
-												</div>
-												<div>
-													<input type='radio' id='option4' name='correct' defaultChecked={ele.answer[3]} />
-													<input type='text' name='single_option4' defaultValue={ele.options[3]} />
-												</div>
-												<div>
-													<input type='submit' value='Edit' />
-													<button onClick={() => this.deleteField(idx)} style={{ color: 'red' }}>
-														Delete
-													</button>
-												</div>
-											</form>
-										</li>
-									);
-								else if (ele.type === 'multiple')
-									return (
-										<li>
-											<form id='multiple-form' onSubmit={(e) => this.editMultiple(e, idx)}>
-												<input type='text' name='question' defaultValue={ele.question} />
-												<div>
-													<input type='checkbox' name='option1' defaultChecked={ele.answer[0] && 'true'} />
-													<input type='text' name='multiple_option1' defaultValue={ele.options[0]} />
-												</div>
-												<div>
-													<input type='checkbox' name='option2' defaultChecked={ele.answer[1] && 'true'} />
-													<input type='text' name='multiple_option2' defaultValue={ele.options[1]} />
-												</div>
-												<div>
-													<input type='checkbox' name='option3' defaultChecked={ele.answer[2] && 'true'} />
-													<input type='text' name='multiple_option3' defaultValue={ele.options[2]} />
-												</div>
-												<div>
-													<input type='checkbox' name='option4' defaultChecked={ele.answer[3] && 'true'} />
-													<input type='text' name='multiple_option4' defaultValue={ele.options[3]} />
-												</div>
-												<div>
-													<input type='submit' value='Edit' />
-													<button onClick={() => this.deleteField(idx)} style={{ color: 'red' }}>
-														Delete
-													</button>
-												</div>
-											</form>
-										</li>
-									);
-								else if (ele.type === 'subjective')
-									return (
-										<li>
-											<form id='subjective-form' onSubmit={(e) => this.editSubjective(e, idx)}>
-												<input type='text' name='question' defaultValue={ele.question} />
-												<div>
-													<input type='submit' value='Edit' />
-													<button onClick={() => this.deleteField(idx)} style={{ color: 'red' }}>
-														Delete
-													</button>
-												</div>
-											</form>
-										</li>
-									);
-							})}
+							{formFields &&
+								formFields.map((ele, idx) => {
+									if (ele.type === 'single')
+										return (
+											<li>
+												<form id='single-form' onSubmit={(e) => this.editSingle(e, idx)}>
+													<input type='text' name='question' defaultValue={ele.question} />
+													<div>
+														<input type='radio' id='option1' name='correct' defaultChecked={ele.answer[0]} />
+														<input type='text' name='single_option1' defaultValue={ele.options[0]} />
+													</div>
+													<div>
+														<input type='radio' id='option2' name='correct' defaultChecked={ele.answer[1]} />
+														<input type='text' name='single_option2' defaultValue={ele.options[1]} />
+													</div>
+													<div>
+														<input type='radio' id='option3' name='correct' defaultChecked={ele.answer[2]} />
+														<input type='text' name='single_option3' defaultValue={ele.options[2]} />
+													</div>
+													<div>
+														<input type='radio' id='option4' name='correct' defaultChecked={ele.answer[3]} />
+														<input type='text' name='single_option4' defaultValue={ele.options[3]} />
+													</div>
+													<div>
+														<input type='submit' value='Edit' />
+														<button onClick={() => this.deleteField(idx)} style={{ color: 'red' }}>
+															Delete
+														</button>
+													</div>
+												</form>
+											</li>
+										);
+									else if (ele.type === 'multiple')
+										return (
+											<li>
+												<form id='multiple-form' onSubmit={(e) => this.editMultiple(e, idx)}>
+													<input type='text' name='question' defaultValue={ele.question} />
+													<div>
+														<input type='checkbox' name='option1' defaultChecked={ele.answer[0] && 'true'} />
+														<input type='text' name='multiple_option1' defaultValue={ele.options[0]} />
+													</div>
+													<div>
+														<input type='checkbox' name='option2' defaultChecked={ele.answer[1] && 'true'} />
+														<input type='text' name='multiple_option2' defaultValue={ele.options[1]} />
+													</div>
+													<div>
+														<input type='checkbox' name='option3' defaultChecked={ele.answer[2] && 'true'} />
+														<input type='text' name='multiple_option3' defaultValue={ele.options[2]} />
+													</div>
+													<div>
+														<input type='checkbox' name='option4' defaultChecked={ele.answer[3] && 'true'} />
+														<input type='text' name='multiple_option4' defaultValue={ele.options[3]} />
+													</div>
+													<div>
+														<input type='submit' value='Edit' />
+														<button onClick={() => this.deleteField(idx)} style={{ color: 'red' }}>
+															Delete
+														</button>
+													</div>
+												</form>
+											</li>
+										);
+									else if (ele.type === 'subjective')
+										return (
+											<li>
+												<form id='subjective-form' onSubmit={(e) => this.editSubjective(e, idx)}>
+													<input type='text' name='question' defaultValue={ele.question} />
+													<div>
+														<input type='submit' value='Edit' />
+														<button onClick={() => this.deleteField(idx)} style={{ color: 'red' }}>
+															Delete
+														</button>
+													</div>
+												</form>
+											</li>
+										);
+								})}
 						</ol>
 					</div>
 				</div>
 				<div className='form-fields'>
 					<form id='title-form' onSubmit={this.handleMeta}>
 						Form Details:
-						<input type='text' name='id' placeholder='Quiz Link' />
 						<input type='text' name='title' placeholder='Quiz Title' />
 						<input type='text' name='description' placeholder='Quiz Description' />
 						<input type='submit' value='Set Title/Description' />
@@ -370,7 +386,7 @@ export default class CreateForm extends Component {
 
 					<button onClick={this.createForm} className='create-button'>
 						{' '}
-						Create Form{' '}
+						Update Form{' '}
 					</button>
 				</div>
 			</div>
