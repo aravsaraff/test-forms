@@ -37,7 +37,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use('/', routes);
+app.use('/api', routes);
 
 const port = process.env.PORT || 8888;
 
