@@ -26,9 +26,7 @@ export default class CreateForm extends Component {
     try {
       const data = await Axios.get("/checkLoggedIn");
       //   let forms = await Axios.get("/fetchForms");
-      if (data.status === 200) {
-        console.log("Logged In");
-      } else {
+      if (data.status !== 200) {
         window.location.href = "/login?status=false";
       }
     } catch (err) {

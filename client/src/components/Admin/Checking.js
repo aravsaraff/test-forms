@@ -184,6 +184,7 @@ export default class Checking extends Component {
   async componentDidMount() {
     try {
       const response = await Axios.get("/checkLoggedIn");
+      console.log(resp);
       if (response.status !== 200) {
         window.location.href = "/login?status=false";
       }
